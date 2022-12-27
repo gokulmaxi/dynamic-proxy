@@ -1,0 +1,30 @@
+version: '3'
+services:
+  openresty:
+    #image: gokuldp/kasm-backend
+    build: .
+    ports:
+      - 80:80
+    networks:
+      - backend
+    volumes:
+      - ./conf:/etc/nginx/conf.d
+  redis:
+    image: "redis:alpine"
+    command: redis-server --requirepass ${REDIS_PASS:-password123}
+    volumes:
+      - redis-data:/data
+      - redis-conf:/usr/local/etc/redis/redis.conf
+    networks:
+      - backend
+volumes:
+  redis-data:
+  redis-conf:
+networks:
+  frontend:
+    driver: bridge
+  backend:
+    driver: bridge
+  # containers:
+  #   name: "containers"
+  #   external: true
